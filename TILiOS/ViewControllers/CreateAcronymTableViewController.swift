@@ -63,7 +63,7 @@ class CreateAcronymTableViewController: UITableViewController {
   }
   
   func saveAcronym(_ acronym: Acronym, completion: @escaping (Result<Void, Error>) -> Void) {
-    AF.request("http://localhost:8080/api/acronyms", method: .post, parameters: acronym, encoder: JSONParameterEncoder.default).validate().response { response in
+    AF.request("http://localhost:8080/api/acronyms", method: .post, parameters: acronym, encoder: JSONParameterEncoder.default).validate(statusCode: 200...200).response { response in
       switch response.result {
       case .success:
         completion(.success(()))
@@ -122,7 +122,6 @@ class CreateAcronymTableViewController: UITableViewController {
     guard let controller = segue.source as? SelectUserTableViewController else {
       return
     }
-
     selectedUser = controller.selectedUser
     userLabel.text = selectedUser?.name
   }

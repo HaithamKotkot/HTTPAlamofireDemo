@@ -65,9 +65,13 @@ class UsersTableViewController: UITableViewController {
   }
   
   func getAllUsers(completion: @escaping (Result<[User], Error>) -> Void) {
-    AF.request("http://localhost:8080/api/users").responseDecodable(of: [User].self) { response in
-      guard let users = response.value else { return }
-      completion(.success(users))
+    AF.request("http://localhost:8080/api/users").validate().responseDecodable(of: [User].self) { response in
+      switch response.result {
+      case .success(let users):
+        completion(.success(users))
+      case .failure(let error):
+        completion(.failure(error))
+      }
     }
   }
 }

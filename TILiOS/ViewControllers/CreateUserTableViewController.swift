@@ -73,8 +73,13 @@ class CreateUserTableViewController: UITableViewController {
   }
   
   func saveUser(_ user: User, completion: @escaping (Result<Void, Error>) -> Void) {
-    AF.request("http://localhost:8080/api/users", method: .post, parameters: user, encoder: JSONParameterEncoder.default).response { response in
-      completion(.success(()))
+    AF.request("http://localhost:8080/api/users", method: .post, parameters: user, encoder: JSONParameterEncoder.default).validate().response { response in
+      switch response.result {
+      case .success:
+        completion(.success(()))
+      case .failure(let error):
+        completion(.failure(error))
+      }
     }
   }
 }

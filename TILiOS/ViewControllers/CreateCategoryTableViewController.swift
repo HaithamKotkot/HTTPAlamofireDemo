@@ -66,8 +66,13 @@ class CreateCategoryTableViewController: UITableViewController {
   }
   
   func saveCategory(_ category: TILCategory, completion: @escaping (Result<Void, Error>) -> Void) {
-    AF.request("http://localhost:8080/api/categories", method: .post, parameters: category, encoder: JSONParameterEncoder.default).response { response in
-      completion(.success(()))
+    AF.request("http://localhost:8080/api/categories", method: .post, parameters: category, encoder: JSONParameterEncoder.default).validate().response { response in
+      switch response.result {
+      case .success:
+        completion(.success(()))
+      case .failure(let error):
+        completion(.failure(error))
+      }
     }
   }
 }

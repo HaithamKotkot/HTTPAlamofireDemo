@@ -65,9 +65,13 @@ class CategoriesTableViewController: UITableViewController {
   }
   
   func getAllCategories(completion: @escaping (Result<[TILCategory], Error>) -> Void) {
-    AF.request("http://localhost:8080/api/categories").responseDecodable(of: [TILCategory].self) { response in
-      guard let categoires = response.value else { return }
-      completion(.success(categoires))
+    AF.request("http://localhost:8080/api/categories").validate().responseDecodable(of: [TILCategory].self) { response in
+      switch response.result {
+      case .success(let categories):
+        completion(.success(categories))
+      case .failure(let error):
+        completion(.failure(error))
+      }
     }
   }
 }

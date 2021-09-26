@@ -66,7 +66,7 @@ class AcronymsTableViewController: UITableViewController {
   }
   
   func getAllAcronyms(completion: @escaping (Result<[Acronym], Error>) -> Void) {
-    AF.request("http://localhost:8080/api/acronyms").responseDecodable(of: [Acronym].self) { response in
+    AF.request("http://localhost:8080/api/acronyms").validate().responseDecodable(of: [Acronym].self) { response in
       switch response.result {
       case .success(let acronyms):
         completion(.success(acronyms))
